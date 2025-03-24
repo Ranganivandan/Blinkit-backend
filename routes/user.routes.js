@@ -10,6 +10,7 @@ const {
   forgotpassword,
   verifyForgotpassotp,
   resetpasssword,
+  userdetails,
 } = require("../controllers/user.controllers");
 const { auth } = require("../middleware/auth");
 
@@ -22,4 +23,5 @@ userrouter.put("/update-user", auth, updateUserDetails);
 userrouter.put("/forgotpassword", forgotpassword);
 userrouter.put("/verify-forgot-password-otp", verifyForgotpassotp);
 userrouter.put("/reset-password", resetpasssword);
+userrouter.get("/user-details", auth, userdetails);
 module.exports = userrouter;

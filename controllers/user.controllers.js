@@ -127,6 +127,9 @@ exports.loginController = async (req, res) => {
     }
 
     const accesstoken = await generateaccesstoken(user._id);
+    const updateuser = await Usermodel.findByIdAndUpdate(user?.id, {
+      last_login_date: new Date(),
+    });
     const cookieoption = {
       http: true,
       secure: true,
@@ -327,7 +330,10 @@ exports.verifyForgotpassotp = async (req, res) => {
         success: false,
       });
     }
-
+    const updateuser = await Usermodel.findByIdAndUpdate(user?.id, {
+      forgot_password_otp: "",
+      forgot_password_expiry: "",
+    });
     // OTP is valid and not expired
     return res.status(200).json({
       message: "OTP verified successfully.",
@@ -372,6 +378,26 @@ exports.resetpasssword = async (req, res) => {
     });
     return res.status(200).json({
       message: "password update succesfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+    });
+  }
+};
+
+exports.userdetails = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await Usermodel.findById(userId).select(
+      "-password -refresh_token"
+    );
+    return res.json({
+      message: "user details",
+      data: user,
+      error: false,
       success: true,
     });
   } catch (error) {
